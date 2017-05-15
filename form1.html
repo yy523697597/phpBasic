@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>form表单</title>
+    <style>
+        body {
+            width: 500px;
+            margin: 0 auto;
+            padding-top: 200px;
+            font-family: "微软雅黑";
+        }
+
+        td,
+        tr,
+        th,
+        caption {
+            text-align: center;
+        }
+
+        td {
+            width: 200px;
+        }
+
+        tr {
+            height: 40px;
+        }
+
+        input[type=submit] {
+            width: 200px;
+            height: 20px;
+            background: transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            height: 30px;
+            transition: all .5s;
+        }
+
+        input[type=submit]:hover {
+            background: yellowgreen;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="processorder.php" method="post">
+        <table>
+            <tbody>
+                <caption>post方法的表单</caption>
+                <tr>
+                    <th>项目</th>
+                    <th>数量</th>
+                </tr>
+                <tr>
+                    <td>Tires</td>
+                    <td><input type="text" name="tireqty" id=""></td>
+                </tr>
+                <tr>
+                    <td>Oil</td>
+                    <td><input type="text" name="oilqty" id=""></td>
+                </tr>
+                <tr>
+                    <td>Spark Plugs</td>
+                    <td><input type="text" name="sparkqty" id=""></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="提交"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+
+</html>
