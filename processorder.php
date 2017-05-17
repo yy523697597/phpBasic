@@ -17,45 +17,56 @@
 <h1>汽车配件</h1>
 <h2>订单详情</h2>
 <?php
-echo '<p>订单处理完毕,时间是: ';
 // 设定默认时区
 date_default_timezone_set('PRC');
-echo date('H:i,JS F Y');
-echo '</p>';
+
+echo '<p>下单时间为: ' . date('Y-m-d H:i:s') . '<p/>';
 $tireqty = $_POST['tireqty'];
 $oilqty = $_POST['oilqty'];
 $sparkqty = $_POST['sparkqty'];
-
-echo '<p>你的订单列表如下:';
-echo '<br>';
-echo $tireqty . ' tires<br>';
-echo $oilqty . ' bottle of oil<br>';
-echo $sparkqty . ' spark plugs<br>';
-echo '</p>';
+$address = $_POST['address'];
+$DOCUMENT_ROOT = $_SERVER['DOCUMENT_ROOT'];
+$date = date('H:i,jS F Y');
 
 $totalqty = 0;
 $totalqty = $tireqty + $oilqty + $sparkqty;
-echo '商品总订单: '.$totalqty.'<br/>';
+echo '商品总订单: ' . $totalqty . '<br/>';
+if ($totalqty == 0) {
+    echo '您还没有任何订单';
+} else {
+    if ($tireqty > 0) {
+        echo $tireqty . ' tires<br/>';
+    }
+    if ($oilqty > 0) {
+        echo $oilqty . ' oils</br>';
+    }
+    if ($sparkqty > 0) {
+        echo $sparkqty . ' spark plugs<br/>';
+    }
+    
+}
+
 $totalamount = 0.00;
-define('TIREPRICE',100);
-define('OILPRICE',10);
-define('SPARKPRICE',4);
+define('TIREPRICE', 100);
+define('OILPRICE', 10);
+define('SPARKPRICE', 4);
+//获取总价格
+$totalamount = $tireqty * TIREPRICE + $oilqty * OILPRICE + $sparkqty * SPARKPRICE;
+//number_format 用于格式化数字
+$totalamount = number_format($totalamount, 2, '.', ',');
+echo '总价格为：' . $totalamount . '<br/>';
+echo '<p>订单地址为：' . $address . '</p>';
 
-$totalamount = $tireqty*TIREPRICE +$oilqty*OILPRICE+$sparkqty*SPARKPRICE;
-
-echo '总价格为：'.$totalamount.'<br/>';
-
-$taxrate=0.10;
-$totalamount = $totalamount *(1+$taxrate);
-echo '含税总价为：'.$totalamount.'<br/>';
-
-echo 'isset($tireqty) :'.isset($tireqty).'<br/>';
-echo 'isset($nothere) :'.isset($nothere).'<br/>';
-echo 'empty($tireqty) :'.empty($tireqty).'<br/>';
-echo 'empty($nothere) :'.empty($nothere).'<br/>';
-
-$address = $_POST['address'];
-echo $address;
+$outputstring = $date . "\t" . $tireqty . " tires \t" . $oilqty . " oil\t" . $sparkqty . " spark plugs\t\$" . $totalamount . "\t" . $address . "\n";
+//fopen ab模式是追加，需要原本有txt文件
+$fp = fopen("order.txt", 'ab');
+flock($fp, LOCK_EX);
+if (!$fp) {
+    echo '<p><strong>您的订单现在不能被处理，请稍候再试</strong></p></body></html>';
+    exit;
+}
+fwrite($fp, $outputstring, strlen($outputstring));
+flock($fp, LOCK_UN);
+fclose($fp);
+echo '<p>订单处理完毕</p>';
 ?>
-</body>
-</html>
