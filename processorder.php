@@ -60,13 +60,16 @@ echo '<p>订单地址为：' . $address . '</p>';
 $outputstring = $date . "\t" . $tireqty . " tires \t" . $oilqty . " oil\t" . $sparkqty . " spark plugs\t\$" . $totalamount . "\t" . $address . "\n";
 //fopen ab模式是追加，需要原本有txt文件
 $fp = fopen("order.txt", 'ab');
+//flock用于锁定文件,LOCK_EX是独占锁定(写入)
 flock($fp, LOCK_EX);
 if (!$fp) {
     echo '<p><strong>您的订单现在不能被处理，请稍候再试</strong></p></body></html>';
     exit;
 }
 fwrite($fp, $outputstring, strlen($outputstring));
+//LOCK_UN是释放锁定
 flock($fp, LOCK_UN);
+//关闭打开的文件
 fclose($fp);
 echo '<p>订单处理完毕</p>';
 ?>
